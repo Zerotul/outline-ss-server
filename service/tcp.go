@@ -217,7 +217,7 @@ func (s *tcpService) handleConnection(listenerPort int, clientTCPConn *net.TCPCo
 	if err != nil {
 		logger.Warningf("Failed location lookup: %v", err)
 	}
-	logger.Debugf("Got location \"%v\" for IP %v", clientLocation, clientTCPConn.RemoteAddr().String())
+	logger.Infof("Got location \"%v\" for IP %v", clientLocation, clientTCPConn.RemoteAddr().String())
 	s.m.AddOpenTCPConnection(clientLocation)
 
 	connStart := time.Now()
@@ -227,7 +227,7 @@ func (s *tcpService) handleConnection(listenerPort int, clientTCPConn *net.TCPCo
 	var proxyMetrics metrics.ProxyMetrics
 	clientConn := metrics.MeasureConn(clientTCPConn, &proxyMetrics.ProxyClient, &proxyMetrics.ClientProxy)
 	cipherEntry, clientReader, clientSalt, timeToCipher, keyErr := findAccessKey(clientConn, remoteIP(clientTCPConn), s.ciphers)
-
+	logger.Infof("found key by connections \"%v\"", cipherEntry.ID)
 	connError := func() *onet.ConnectionError {
 		if keyErr != nil {
 			logger.Debugf("Failed to find a valid cipher after reading %v bytes: %v", proxyMetrics.ClientProxy, keyErr)

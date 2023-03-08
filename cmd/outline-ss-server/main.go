@@ -31,12 +31,9 @@ import (
 	"github.com/Jigsaw-Code/outline-ss-server/service"
 	"github.com/Jigsaw-Code/outline-ss-server/service/metrics"
 	ss "github.com/Jigsaw-Code/outline-ss-server/shadowsocks"
-	"github.com/op/go-logging"
-	"github.com/oschwald/geoip2-golang"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"golang.org/x/crypto/ssh/terminal"
-	"gopkg.in/yaml.v2"
 )
 
 var logger *logging.Logger
@@ -84,6 +81,7 @@ func (s *SSServer) startPort(portNum int) error {
 		return fmt.Errorf("Failed to start UDP on port %v: %v", portNum, err)
 	}
 	logger.Infof("Listening TCP and UDP on port %v", portNum)
+	logger.Infof("custom shadowbox")
 	port := &ssPort{cipherList: service.NewCipherList()}
 	// TODO: Register initial data metrics at zero.
 	port.tcpService = service.NewTCPService(port.cipherList, &s.replayCache, s.m, tcpReadTimeout)
